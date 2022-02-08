@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
 
-const Title = ({ text }) => <h1>{text}</h1>
-
 const Button = ({ handleClick, text }) => (
     <button onClick={handleClick}>{text}</button>
 )
 
-const StatisticLine = ({ text, value }) => {
-    return (
-        <tr>
-            <td>{text}</td>
-            <td>{value}</td>
-        </tr>
-    )
-}
+const StatisticLine = ({ text, value }) => (
+    <tr>
+        <td>{text}</td>
+        <td>{value}</td>
+    </tr>
+)
 
 const Statistics = ({ good, neutral, bad }) => {
     const all = good + neutral + bad
@@ -45,11 +41,11 @@ function App() {
 
     return (
         <div>
-            <Title text="give feedback"/>
+            <h1>give feedback</h1>
             <Button handleClick={handleGood} text='good'/>
             <Button handleClick={handleNeutral} text='neutral'/>
             <Button handleClick={handleBad} text='bad'/>
-            <Title text="statistics"/>
+            <h1>statistics</h1>
             <Statistics good={good} neutral={neutral} bad={bad}/>
         </div>
     )
