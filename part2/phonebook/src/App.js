@@ -4,12 +4,37 @@ import personService from './services/persons'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import reactDom from "react-dom"
+import { getQueriesForElement } from "@testing-library/react"
+
+const Notification = ({ message, color }) => {
+    const notificationStyle = {
+        color,
+        background: 'lightgray',
+        fontSize: 20,
+        borderStyle: 'solid',
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 10
+    }
+    
+    if (message === null) {
+        return null
+    }
+    return (
+        <div style={notificationStyle}>
+            {message}
+        </div>
+    )
+}
 
 const App = () => {
     const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [filter, setFilter] = useState('')
+    const [notificationMessage, setNotificationMessage] = useState(null)
+    const [notificationColor, setNotificationColor] = useState(null)
 
     useEffect(() => {
         personService
@@ -38,6 +63,12 @@ const App = () => {
                     setPersons(persons.concat(returnedPerson))
                     setNewName('')
                     setNewNumber('')
+
+                    setNotificationColor('green')
+                    setNotificationMessage(`Added ${returnedPerson.name}`)
+                    setTimeout(() => {
+                        setNotificationMessage(null)
+                    }, 3000)
                 })
         }
     }
@@ -52,6 +83,20 @@ const App = () => {
                 .update(person.id, changedPerson)
                 .then(returnedPerson => {
                     setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+
+                    setNotificationColor('green')
+                    setNotificationMessage(`Changed ${person.name}'s number to ${person.number}`)
+                    setTimeout(() => {
+                        setNotificationMessage(null)
+                    }, 3000)
+                })
+                .catch(error => {
+                    setNotificationColor('red')
+                    setNotificationMessage(`${person.name}'s information has already been removed from server`)
+                    setTimeout(() => {
+                        setNotificationMessage(null)
+                    }, 3000)
+                    setPersons(persons.filter(n => n.id !== id))
                 })
         }        
     }
@@ -64,6 +109,20 @@ const App = () => {
             .remove(id)
             .then(() => {
                 setPersons(persons.filter(n => n.id !== id))
+
+                setNotificationColor('green')
+                setNotificationMessage(`Removed ${person.name}'s number from phonebook`)
+                setTimeout(() => {
+                    setNotificationMessage(null)
+                }, 3000)
+            })
+            .catch(error => {
+                setNotificationColor('red')
+                setNotificationMessage(`${person.name}'s information has already been removed from server`)
+                setTimeout(() => {
+                    setNotificationMessage(null)
+                }, 3000)
+                setPersons(persons.filter(n => n.id !== id))
             })
         }
     }
@@ -71,6 +130,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+			<Notification message={notificationMessage} color={notificationColor} />
             <Filter filter={filter} setFilter={setFilter} />
             <h2>Add contact</h2>
             <PersonForm
