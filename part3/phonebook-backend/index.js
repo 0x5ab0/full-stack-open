@@ -1,8 +1,18 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
+// middleware
 app.use(express.json())
 
+morgan.token('body', (request, response) => {
+    return JSON.stringify(request.body)
+})
+app.use(morgan(
+    ':method :url :status :res[content-length] - :response-time ms :body'
+))
+
+// initial data
 const generateId = () => {
     return Math.floor(Math.random() * 10**15)
 }
@@ -30,6 +40,7 @@ let persons = [
     }
 ]
 
+// routes
 app.get('/info', (request, response) => {
     response.send(
         `<div>
