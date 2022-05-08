@@ -4,8 +4,6 @@ import personService from './services/persons'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
-import reactDom from "react-dom"
-import { getQueriesForElement } from "@testing-library/react"
 
 const Notification = ({ message, color }) => {
     const notificationStyle = {
@@ -74,7 +72,7 @@ const App = () => {
     }
 
     const updateNumber = (id, newNumber) => {
-        const person = persons.find(person => person.id == id)
+        const person = persons.find(person => person.id === id)
         const prompt = `${person.name} is already added to phonebook, replace the old number with a new one?`
         const changedPerson = { ...person, number: newNumber }
         
