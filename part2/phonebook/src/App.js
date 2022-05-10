@@ -68,6 +68,13 @@ const App = () => {
                         setNotificationMessage(null)
                     }, 3000)
                 })
+                .catch(error => {
+                    setNotificationColor('red')
+                    setNotificationMessage(JSON.stringify(error.response.data))
+                    setTimeout(() => {
+                        setNotificationMessage(null)
+                    }, 3000)
+                })
         }
     }
 
@@ -90,11 +97,10 @@ const App = () => {
                 })
                 .catch(error => {
                     setNotificationColor('red')
-                    setNotificationMessage(`${person.name}'s information has already been removed from server`)
+                    setNotificationMessage(error.message)
                     setTimeout(() => {
                         setNotificationMessage(null)
                     }, 3000)
-                    setPersons(persons.filter(n => n.id !== id))
                 })
         }        
     }
